@@ -1,6 +1,7 @@
-fastapi
-pydantic
-uvicorn
-sqlalchemy
-alembic
-swagger-ui
+SQLAlchemy==2.0.36
+alembic==1.13.3
+fastapi==0.115.2
+psycopg2-binary==2.9.10
+pydantic==2.9.2
+swagger-ui==0.1.2
+uvicorn==0.32.0
