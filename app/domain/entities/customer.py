@@ -7,3 +7,6 @@ class Customer(BaseModel):
     name: str
     cpf: str
     email: Optional[str] = None
+
+    class Config:
+        orm_mode = True
