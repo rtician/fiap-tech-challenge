@@ -1,6 +1,8 @@
+import os
+
 DATABASE_URL = ""
 
-CONFIG_DB_HOST: str = "localhost"
+CONFIG_DB_HOST: str = os.getenv("CONFIG_DB_HOST", "postgres")
 CONFIG_DB_NAME: str = "app_db"
 CONFIG_DB_USER: str = "user"
 CONFIG_DB_PASSWORD: str = "randomP*ssword!"
