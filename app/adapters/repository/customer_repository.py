@@ -1,9 +1,8 @@
 from typing import Optional
 
-from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.adapters.models.session import get_db
+from app.adapters.models import CustomerModel
 from app.domain.repositories.customer_repository import ICustomerRepository
 from app.domain.entities.customer import Customer
 
@@ -13,14 +12,12 @@ class SQLCustomerRepository(ICustomerRepository):
         self.session = session
 
     def add_customer(self, customer: Customer) -> Customer:
-        self.session.add(customer)
+        instance = CustomerModel(**customer.model_dump())
+        self.session.add(instance)
         self.session.commit()
-        self.session.refresh(customer)
-        return customer
+        self.session.refresh(instance)
+        return Customer.from_orm(instance)
 
     def get_customer_by_cpf(self, cpf: str) -> Optional[Customer]:
-        return self.session.query(Customer).filter_by(cpf=cpf).first()
-
-
-def get_customer_repository(session: Session = Depends(get_db)) -> SQLCustomerRepository:
-    return SQLCustomerRepository(sesson=session)
+        instance = self.session.query(CustomerModel).filter_by(cpf=cpf).first()
+        return Customer.from_orm(instance) if instance else None
