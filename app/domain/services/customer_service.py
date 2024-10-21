@@ -1,7 +1,7 @@
 from app.adapters.models.session import get_db
 from app.adapters.repository.customer_repository import SQLCustomerRepository
-from app.domain.repositories.customer_repository import ICustomerRepository
 from app.domain.entities.customer import Customer
+from app.domain.repositories.customer_repository import ICustomerRepository
 from app.domain.services.exceptions import CpfAlreadyExists
 
 
