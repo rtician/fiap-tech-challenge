@@ -2,11 +2,11 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 
+from app.application.services import CpfAlreadyExists
+from app.application.services.customer_service import CustomerService
+from app.application.services.customer_service import get_customer_service
 from app.domain.entities.customer import Customer
 from app.domain.entities.customer import CustomerRequest
-from app.domain.services.customer_service import CustomerService
-from app.domain.services.customer_service import get_customer_service
-from app.domain.services.exceptions import CpfAlreadyExists
 
 router = APIRouter(prefix="/customers")
 
