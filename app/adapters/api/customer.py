@@ -2,9 +2,9 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 
-from app.application.services import CpfAlreadyExists
 from app.application.services.customer_service import CustomerService
 from app.application.services.customer_service import get_customer_service
+from app.application.services.exceptions import CpfAlreadyExists
 from app.domain.entities.customer import Customer
 from app.domain.entities.customer import CustomerRequest
 
