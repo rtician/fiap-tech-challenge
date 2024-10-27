@@ -5,9 +5,9 @@ from fastapi import Depends
 from fastapi import HTTPException
 from starlette import status
 
+from app.application.services.product_service import ProductService
+from app.application.services.product_service import get_product_service
 from app.domain.entities.product import Product
-from app.domain.services.product_service import ProductService
-from app.domain.services.product_service import get_product_service
 
 router = APIRouter(prefix="/products")
 
