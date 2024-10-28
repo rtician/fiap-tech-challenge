@@ -11,7 +11,7 @@ class OrderModel(Base):
     __tablename__ = "order"
 
     id = Column(Integer, primary_key=True, index=True)
-    customer_id = Column(Integer, ForeignKey(""))
+    customer_id = Column(Integer, ForeignKey("customer.id"))
     created = Column(DateTime, default=datetime.now(UTC))
 
     customer = relationship("CustomerModel", back_populates="orders")
