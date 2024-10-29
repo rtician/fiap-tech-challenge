@@ -1,26 +1,34 @@
 from datetime import datetime
 from typing import List
-from typing import Optional
 
 from pydantic import BaseModel
-
-from app.domain.entities.product import Product
 
 
 class OrderItem(BaseModel):
     product_id: int
     quantity: int
-    product: Optional[Product] = None  # Include product details if needed
+
+
+class OrderItemDb(OrderItem):
+    id: int
+    order_id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
 
 
 class Order(BaseModel):
-    id: Optional[int] = None
     customer_id: int
-    date_created: Optional[datetime] = None
     items: List[OrderItem]
+
+
+class OrderDb(Order):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    items: List[OrderItemDb]
 
     class Config:
         from_attributes = True
