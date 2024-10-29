@@ -14,7 +14,9 @@ class OrderModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customer.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
+    updated_at = Column(
+        DateTime(timezone=True), onupdate=func.now(), nullable=True, default=func.now()
+    )
 
     customer = relationship("CustomerModel", back_populates="orders")
     items = relationship("OrderItem", back_populates="order")
@@ -31,4 +33,4 @@ class OrderItem(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
 
     order = relationship("OrderModel", back_populates="items")
-    product = relationship("ProductModel", back_populates="items")
+    product = relationship("ProductModel", back_populates="order_items")
