@@ -2,6 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.orm import relationship
 
@@ -13,6 +14,7 @@ class OrderModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customer.id"))
+    status = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(
         DateTime(timezone=True), onupdate=func.now(), nullable=True, default=func.now()
