@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.adapters.models import ProductModel
 from app.domain.entities.product import Product
 from app.domain.entities.product import ProductCategory
+from app.domain.entities.product import ProductDb
 from app.domain.repositories.product_repository import IProductRepository
 
 
@@ -13,21 +14,21 @@ class SQLProductRepository(IProductRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_product(self, product: Product) -> Product:
-        db_product = ProductModel(**product.dict())
+    def add_product(self, product: Product) -> ProductDb:
+        db_product = ProductModel(**product.model_dump())
         self.session.add(db_product)
         self.session.commit()
         self.session.refresh(db_product)
-        return Product.from_orm(db_product)
+        return ProductDb.from_orm(db_product)
 
-    def update_product(self, product_id: int, product: Product) -> Optional[Product]:
+    def update_product(self, product_id: int, product: Product) -> Optional[ProductDb]:
         db_product = self.session.query(ProductModel).filter_by(id=product_id).first()
         if db_product:
-            for key, value in product.dict().items():
-                setattr(db_product, key, value)
+            for attr, value in product.model_dump().items():
+                setattr(db_product, attr, value)
             self.session.commit()
 
-            return Product.from_orm(db_product)
+            return ProductDb.from_orm(db_product)
 
     def delete_product(self, product_id: int) -> bool:
         db_product = self.session.query(ProductModel).filter_by(id=product_id).first()
@@ -37,9 +38,9 @@ class SQLProductRepository(IProductRepository):
         self.session.commit()
         return True
 
-    def get_all_products(self) -> List[Product]:
-        return [Product.from_orm(instance) for instance in self.session.query(ProductModel).all()]
+    def get_all_products(self) -> List[ProductDb]:
+        return [ProductDb.from_orm(instance) for instance in self.session.query(ProductModel).all()]
 
-    def get_product_by_category(self, category: ProductCategory) -> Optional[Product]:
+    def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         instance = self.session.query(ProductModel).filter_by(category=category.value).first()
-        return Product.from_orm(instance) if instance else None
+        return ProductDb.from_orm(instance) if instance else None
