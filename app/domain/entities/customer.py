@@ -10,7 +10,7 @@ class CustomerRequest(BaseModel):
 
 
 class Customer(BaseModel):
-    id: Optional[int] = None
+    id: int
     name: str
     cpf: str
     email: Optional[str] = None

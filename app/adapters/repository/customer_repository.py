@@ -11,8 +11,8 @@ class SQLCustomerRepository(ICustomerRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_customer(self, customer: Customer) -> Customer:
-        instance = CustomerModel(**customer.model_dump())
+    def add_customer(self, name: str, email: str, cpf: str) -> Customer:
+        instance = CustomerModel(name=name, email=email, cpf=cpf)
         self.session.add(instance)
         self.session.commit()
         self.session.refresh(instance)

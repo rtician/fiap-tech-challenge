@@ -7,7 +7,7 @@ from app.domain.entities.customer import Customer
 
 class ICustomerRepository(ABC):
     @abstractmethod
-    def add_customer(self, customer: Customer) -> Customer:
+    def add_customer(self, name: str, email: str, cpf: str) -> Customer:
         pass
 
     @abstractmethod

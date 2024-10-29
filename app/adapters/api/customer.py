@@ -15,9 +15,8 @@ router = APIRouter(prefix="/customers")
 def register_customer(
     customer_request: CustomerRequest, service: CustomerService = Depends(get_customer_service)
 ):
-    customer = Customer(**customer_request.dict())
     try:
-        return service.register_customer(customer)
+        return service.register_customer(customer_request)
     except CpfAlreadyExists as e:
         raise HTTPException(status_code=400, detail=str(e))
 

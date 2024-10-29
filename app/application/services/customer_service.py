@@ -3,6 +3,7 @@ from app.adapters.repository.customer_repository import SQLCustomerRepository
 from app.application.services.exceptions import CpfAlreadyExists
 from app.application.services.exceptions import NotFound
 from app.domain.entities.customer import Customer
+from app.domain.entities.customer import CustomerRequest
 from app.domain.repositories.customer_repository import ICustomerRepository
 
 
@@ -10,11 +11,11 @@ class CustomerService:
     def __init__(self, customer_repository: ICustomerRepository):
         self.customer_repository = customer_repository
 
-    def register_customer(self, customer: Customer) -> Customer:
+    def register_customer(self, customer: CustomerRequest) -> Customer:
         existing_customer = self.customer_repository.get_customer_by_cpf(customer.cpf)
         if existing_customer:
             raise CpfAlreadyExists("Customer with this CPF already exists.")
-        return self.customer_repository.add_customer(customer)
+        return self.customer_repository.add_customer(customer.name, customer.email, customer.cpf)
 
     def get_customer(self, cpf: str) -> Customer:
         customer = self.customer_repository.get_customer_by_cpf(cpf)
