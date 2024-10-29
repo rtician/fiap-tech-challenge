@@ -1,19 +1,19 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
 
 
-class CustomerRequest(BaseModel):
-    name: str
-    cpf: str
-    email: Optional[str] = None
-
-
 class Customer(BaseModel):
-    id: int
     name: str
     cpf: str
     email: Optional[str] = None
+
+
+class CustomerDb(Customer):
+    id: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
