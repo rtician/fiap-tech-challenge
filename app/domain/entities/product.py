@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -11,8 +10,16 @@ class ProductCategory(str, Enum):
     DESSERT = "Dessert"
 
 
+class ProductRequest(BaseModel):
+    name: str
+    description: str
+    category: ProductCategory
+    price: float
+    quantity: int
+
+
 class Product(BaseModel):
-    id: Optional[int] = None
+    id: int
     name: str
     description: str
     category: str

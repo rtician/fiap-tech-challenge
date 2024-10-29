@@ -9,11 +9,21 @@ from app.domain.entities.product import ProductCategory
 
 class IProductRepository(ABC):
     @abstractmethod
-    def add_product(self, product: Product) -> Product:
+    def add_product(
+        self, name: str, description: str, category: ProductCategory, price: float, quantity: int
+    ) -> Product:
         pass
 
     @abstractmethod
-    def update_product(self, product_id: int, product: Product) -> Optional[Product]:
+    def update_product(
+        self,
+        product_id: int,
+        name: str,
+        description: str,
+        category: ProductCategory,
+        price: float,
+        quantity: int,
+    ) -> Optional[Product]:
         pass
 
     @abstractmethod

@@ -13,18 +13,37 @@ class SQLProductRepository(IProductRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_product(self, product: Product) -> Product:
-        db_product = ProductModel(**product.dict())
+    def add_product(
+        self, name: str, description: str, category: ProductCategory, price: float, quantity: int
+    ) -> Product:
+        db_product = ProductModel(
+            name=name,
+            description=description,
+            category=category.value,
+            price=price,
+            quantity=quantity,
+        )
         self.session.add(db_product)
         self.session.commit()
         self.session.refresh(db_product)
         return Product.from_orm(db_product)
 
-    def update_product(self, product_id: int, product: Product) -> Optional[Product]:
+    def update_product(
+        self,
+        product_id: int,
+        name: str,
+        description: str,
+        category: ProductCategory,
+        price: float,
+        quantity: int,
+    ) -> Optional[Product]:
         db_product = self.session.query(ProductModel).filter_by(id=product_id).first()
         if db_product:
-            for key, value in product.dict().items():
-                setattr(db_product, key, value)
+            db_product.name = name
+            db_product.description = description
+            db_product.category = category.value
+            db_product.price = price
+            db_product.quantity = quantity
             self.session.commit()
 
             return Product.from_orm(db_product)
