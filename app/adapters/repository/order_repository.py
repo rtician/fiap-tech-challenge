@@ -2,6 +2,7 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
+from app.adapters.models import OrderItem
 from app.adapters.models import OrderModel
 from app.domain.entities.order import Order
 from app.domain.entities.order import OrderDb
@@ -14,11 +15,28 @@ class SQLOrderRepository(IOrderRepository):
         self.session = session
 
     def add_order(self, order: Order, status: OrderStatus) -> OrderDb:
-        instance = OrderModel(**order.model_dump(), status=status)
-        self.session.add(instance)
-        self.session.commit()
-        self.session.refresh(instance)
-        return OrderDb.from_orm(instance)
+        try:
+            db_order = OrderModel(customer_id=order.customer_id, status=status)
+            self.session.add(db_order)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        try:
+            for item in order.items:
+                db_item = OrderItem(
+                    order_id=db_order.id, product_id=item.product_id, quantity=item.quantity
+                )
+                self.session.add(db_item)
+            self.session.commit()
+        except Exception:
+            self.session.rollback()
+            raise
+
+        self.session.refresh(db_order)
+
+        return OrderDb.from_orm(db_order)
 
     def cancel_order(self, order_id: int) -> bool:
         raise NotImplementedError
