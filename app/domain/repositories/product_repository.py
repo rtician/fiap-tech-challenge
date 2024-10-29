@@ -5,25 +5,16 @@ from typing import Optional
 
 from app.domain.entities.product import Product
 from app.domain.entities.product import ProductCategory
+from app.domain.entities.product import ProductDb
 
 
 class IProductRepository(ABC):
     @abstractmethod
-    def add_product(
-        self, name: str, description: str, category: ProductCategory, price: float, quantity: int
-    ) -> Product:
+    def add_product(self, product: Product) -> ProductDb:
         pass
 
     @abstractmethod
-    def update_product(
-        self,
-        product_id: int,
-        name: str,
-        description: str,
-        category: ProductCategory,
-        price: float,
-        quantity: int,
-    ) -> Optional[Product]:
+    def update_product(self, product_id: int, product: Product) -> Optional[ProductDb]:
         pass
 
     @abstractmethod
@@ -31,9 +22,9 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_all_products(self) -> List[Product]:
+    def get_all_products(self) -> List[ProductDb]:
         pass
 
     @abstractmethod
-    def get_product_by_category(self, category: ProductCategory) -> Optional[Product]:
+    def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         pass

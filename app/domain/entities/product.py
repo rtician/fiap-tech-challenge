@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel
@@ -10,7 +11,7 @@ class ProductCategory(str, Enum):
     DESSERT = "Dessert"
 
 
-class ProductRequest(BaseModel):
+class Product(BaseModel):
     name: str
     description: str
     category: ProductCategory
@@ -18,13 +19,10 @@ class ProductRequest(BaseModel):
     quantity: int
 
 
-class Product(BaseModel):
+class ProductDb(Product):
     id: int
-    name: str
-    description: str
-    category: str
-    price: float
-    quantity: int
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True
