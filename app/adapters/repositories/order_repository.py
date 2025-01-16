@@ -1,12 +1,9 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from app.adapters.models import OrderItem
-from app.adapters.models import OrderModel
-from app.domain.entities.order import Order
-from app.domain.entities.order import OrderDb
-from app.domain.entities.order import OrderStatus
+from app.adapters.models.order_model import OrderItem, OrderModel
+from app.domain.entities.order import Order, OrderDb, OrderStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -16,7 +13,7 @@ class SQLOrderRepository(IOrderRepository):
 
     def add_order(self, order: Order, status: OrderStatus) -> OrderDb:
         try:
-            db_order = OrderModel(customer_id=order.customer_id, status=status)
+            db_order = OrderModel(customer_id=order.customer_id, status=status.value)
             self.session.add(db_order)
             self.session.commit()
         except Exception:
@@ -26,7 +23,9 @@ class SQLOrderRepository(IOrderRepository):
         try:
             for item in order.items:
                 db_item = OrderItem(
-                    order_id=db_order.id, product_id=item.product_id, quantity=item.quantity
+                    order_id=db_order.id,
+                    product_id=item.product_id,
+                    quantity=item.quantity
                 )
                 self.session.add(db_item)
             self.session.commit()
@@ -35,13 +34,12 @@ class SQLOrderRepository(IOrderRepository):
             raise
 
         self.session.refresh(db_order)
-
         return OrderDb.from_orm(db_order)
 
     def cancel_order(self, order_id: int) -> bool:
         raise NotImplementedError
 
-    def get_order(self, order_id: int) -> OrderDb:
+    def get_order(self, order_id: int) -> Optional[OrderDb]:
         instance = self.session.query(OrderModel).filter_by(id=order_id).first()
         return OrderDb.from_orm(instance) if instance else None
 

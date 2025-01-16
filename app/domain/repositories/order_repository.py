@@ -1,10 +1,7 @@
-from abc import ABC
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from typing import List
 
-from app.domain.entities.order import Order
-from app.domain.entities.order import OrderDb
-from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import Order, OrderDb, OrderStatus
 
 
 class IOrderRepository(ABC):

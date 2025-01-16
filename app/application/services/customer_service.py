@@ -1,10 +1,6 @@
-from app.adapters.models.session import get_db
-from app.adapters.repository.customer_repository import SQLCustomerRepository
-from app.application.services.exceptions import CpfAlreadyExists
-from app.application.services.exceptions import NotFound
-from app.domain.entities.customer import Customer
-from app.domain.entities.customer import CustomerDb
 from app.domain.repositories.customer_repository import ICustomerRepository
+from app.domain.entities.customer import Customer, CustomerDb
+from app.application.exceptions import CpfAlreadyExists, NotFound
 
 
 class CustomerService:
@@ -22,9 +18,3 @@ class CustomerService:
         if not customer:
             raise NotFound("Customer with this CPF not found.")
         return customer
-
-
-def get_customer_service() -> CustomerService:
-    session = next(get_db())
-    repository = SQLCustomerRepository(session=session)
-    return CustomerService(repository)

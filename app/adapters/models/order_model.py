@@ -1,9 +1,4 @@
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy import func
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from app.adapters.models.session import Base
@@ -16,9 +11,7 @@ class OrderModel(Base):
     customer_id = Column(Integer, ForeignKey("customer.id"))
     status = Column(String)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(
-        DateTime(timezone=True), onupdate=func.now(), nullable=True, default=func.now()
-    )
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), default=func.now())
 
     customer = relationship("CustomerModel", back_populates="orders")
     items = relationship("OrderItem", back_populates="order")
@@ -32,9 +25,7 @@ class OrderItem(Base):
     product_id = Column(Integer, ForeignKey("product.id"))
     quantity = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(
-        DateTime(timezone=True), onupdate=func.now(), nullable=True, default=func.now()
-    )
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), default=func.now())
 
     order = relationship("OrderModel", back_populates="items")
     product = relationship("ProductModel", back_populates="order_items")

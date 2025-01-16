@@ -1,11 +1,6 @@
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
-from app.adapters.models.session import get_db
-from app.adapters.repository.order_repository import SQLOrderRepository
-from app.domain.entities.order import Order
-from app.domain.entities.order import OrderDb
-from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import Order, OrderDb, OrderStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -21,9 +16,3 @@ class OrderService:
 
     def get_all_orders(self) -> List[OrderDb]:
         return self.order_repository.get_all_orders()
-
-
-def get_order_service() -> OrderService:
-    session = next(get_db())
-    repository = SQLOrderRepository(session=session)
-    return OrderService(repository)
