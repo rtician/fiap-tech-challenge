@@ -14,23 +14,23 @@ from app.adapters.repositories.order_repository import SQLOrderRepository
 from app.adapters.repositories.product_repository import SQLProductRepository
 
 # Service / Use Cases
-from app.application.services.customer_service import CustomerService
-from app.application.services.order_service import OrderService
-from app.application.services.product_service import ProductService
+from app.application.use_cases.customer_use_cases import CustomerUseCases
+from app.application.use_cases.order_use_cases import OrderUseCases
+from app.application.use_cases.product_use_cases import ProductUseCases
 
 
 # Dependency factories
 def get_customer_use_cases(db=Depends(get_db)):
     repo = SQLCustomerRepository(session=db)
-    return CustomerService(customer_repository=repo)
+    return CustomerUseCases(customer_repository=repo)
 
 def get_order_use_cases(db=Depends(get_db)):
     repo = SQLOrderRepository(session=db)
-    return OrderService(order_repository=repo)
+    return OrderUseCases(order_repository=repo)
 
 def get_product_use_cases(db=Depends(get_db)):
     repo = SQLProductRepository(session=db)
-    return ProductService(product_repository=repo)
+    return ProductUseCases(product_repository=repo)
 
 
 app = FastAPI()

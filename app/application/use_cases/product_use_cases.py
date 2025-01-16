@@ -4,7 +4,7 @@ from app.domain.entities.product import Product, ProductCategory, ProductDb
 from app.domain.repositories.product_repository import IProductRepository
 
 
-class ProductService:
+class ProductUseCases:
     def __init__(self, product_repository: IProductRepository):
         self.product_repository = product_repository
 

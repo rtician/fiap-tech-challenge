@@ -4,7 +4,7 @@ from app.domain.entities.order import Order, OrderDb, OrderStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
-class OrderService:
+class OrderUseCases:
     def __init__(self, order_repository: IOrderRepository):
         self.order_repository = order_repository
 

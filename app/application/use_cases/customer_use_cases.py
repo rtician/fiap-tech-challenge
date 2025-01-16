@@ -3,7 +3,7 @@ from app.domain.entities.customer import Customer, CustomerDb
 from app.application.exceptions import CpfAlreadyExists, NotFound
 
 
-class CustomerService:
+class CustomerUseCases:
     def __init__(self, customer_repository: ICustomerRepository):
         self.customer_repository = customer_repository
 
