@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from app.adapters.models.session import get_db
+from app.adapters.repositories.order_repository import SQLOrderRepository
 from app.domain.entities.order import (
     Order,
     OrderDb,
@@ -40,3 +42,9 @@ class OrderUseCases:
 
     def get_filtered_orders(self) -> List[OrderDb]:
         return self.order_repository.get_filtered_orders()
+
+
+def get_order_use_case() -> OrderUseCases:
+    session = next(get_db())
+    repository = SQLOrderRepository(session=session)
+    return OrderUseCases(repository)

@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from app.adapters.models.session import get_db
+from app.adapters.repositories.product_repository import SQLProductRepository
 from app.domain.entities.product import Product, ProductCategory, ProductDb
 from app.domain.repositories.product_repository import IProductRepository
 
@@ -22,3 +24,9 @@ class ProductUseCases:
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         return self.product_repository.get_product_by_category(category)
+
+
+def get_product_use_case() -> ProductUseCases:
+    session = next(get_db())
+    repository = SQLProductRepository(session=session)
+    return ProductUseCases(repository)

@@ -1,3 +1,5 @@
+from app.adapters.models.session import get_db
+from app.adapters.repositories.customer_repository import SQLCustomerRepository
 from app.domain.repositories.customer_repository import ICustomerRepository
 from app.domain.entities.customer import Customer, CustomerDb
 from app.application.exceptions import CpfAlreadyExists, NotFound
@@ -18,3 +20,9 @@ class CustomerUseCases:
         if not customer:
             raise NotFound("Customer with this CPF not found.")
         return customer
+
+
+def get_customer_use_case() -> CustomerUseCases:
+    session = next(get_db())
+    repository = SQLCustomerRepository(session=session)
+    return CustomerUseCases(repository)
