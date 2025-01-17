@@ -2,6 +2,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from app.adapters.models.session import Base
+from app.domain.entities.order import OrderStatus, PaymentStatus
 
 
 class OrderModel(Base):
@@ -9,7 +10,8 @@ class OrderModel(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     customer_id = Column(Integer, ForeignKey("customer.id"))
-    status = Column(String)
+    status = Column(String, default=OrderStatus.PLACED.value)
+    payment_status = Column(String, default=PaymentStatus.PENDING.value)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), default=func.now())
 

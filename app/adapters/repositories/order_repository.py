@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
-
+from sqlalchemy import case, asc
 from app.adapters.models.order_model import OrderItem, OrderModel
-from app.domain.entities.order import Order, OrderDb, OrderStatus
+from app.domain.entities.order import Order, OrderDb, OrderStatus, PaymentStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -13,7 +13,11 @@ class SQLOrderRepository(IOrderRepository):
 
     def add_order(self, order: Order, status: OrderStatus) -> OrderDb:
         try:
-            db_order = OrderModel(customer_id=order.customer_id, status=status.value)
+            db_order = OrderModel(
+                customer_id=order.customer_id,
+                status=status.value,
+                payment_status=PaymentStatus.PENDING.value
+            )
             self.session.add(db_order)
             self.session.commit()
         except Exception:
@@ -37,7 +41,12 @@ class SQLOrderRepository(IOrderRepository):
         return OrderDb.from_orm(db_order)
 
     def cancel_order(self, order_id: int) -> bool:
-        raise NotImplementedError
+        order = self.session.query(OrderModel).filter_by(id=order_id).first()
+        if not order:
+            return False
+        order.status = OrderStatus.CANCELED.value
+        self.session.commit()
+        return True
 
     def get_order(self, order_id: int) -> Optional[OrderDb]:
         instance = self.session.query(OrderModel).filter_by(id=order_id).first()
@@ -45,4 +54,44 @@ class SQLOrderRepository(IOrderRepository):
 
     def get_all_orders(self) -> List[OrderDb]:
         instances = self.session.query(OrderModel).all()
+        return [OrderDb.from_orm(instance) for instance in instances]
+
+    def update_order_status(self, order_id: int, status: OrderStatus) -> Optional[OrderDb]:
+        order = self.session.query(OrderModel).filter_by(id=order_id).first()
+        if not order:
+            return None
+        order.status = status.value
+        self.session.commit()
+        self.session.refresh(order)
+        return OrderDb.from_orm(order)
+
+    def update_payment_status(self, order_id: int, payment_status: PaymentStatus) -> Optional[OrderDb]:
+        order = self.session.query(OrderModel).filter_by(id=order_id).first()
+        if not order:
+            return None
+        order.payment_status = payment_status.value
+        self.session.commit()
+        self.session.refresh(order)
+        return OrderDb.from_orm(order)
+
+    def get_filtered_orders(self) -> List[OrderDb]:
+        """
+        Return orders excluding 'FINALIZED', sorted by:
+          1. status priority: READY > PREPARING > RECEIVED
+          2. older orders first
+        """
+        status_priority = case(
+            (OrderModel.status == OrderStatus.READY.value, 3),
+            (OrderModel.status == OrderStatus.PREPARING.value, 2),
+            (OrderModel.status == OrderStatus.RECEIVED.value, 1),
+            else_=0
+        )
+
+        query = (
+            self.session.query(OrderModel)
+            .filter(OrderModel.status != OrderStatus.FINALIZED.value)
+            .order_by(status_priority.desc(), asc(OrderModel.created_at))
+        )
+
+        instances = query.all()
         return [OrderDb.from_orm(instance) for instance in instances]

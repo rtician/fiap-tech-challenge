@@ -1,24 +1,56 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
-
 from app.application.use_cases.order_use_cases import OrderUseCases
-from app.domain.entities.order import Order, OrderDb
+from app.domain.entities.order import (
+    Order, OrderDb, OrderStatus, PaymentStatus
+)
 
 router = APIRouter()
 
-@router.post("", response_model=OrderDb)
+
+@router.post("/checkout")
 def checkout(
     order: Order,
     use_cases: OrderUseCases = Depends()
 ):
-    return use_cases.add_order(order)
+    order_id = use_cases.checkout_order(order)
+    return {"order_id": order_id}
 
-@router.get("/{order_id}", response_model=OrderDb)
-def get_order(
+@router.get("/{order_id}/payment-status")
+def get_payment_status(
     order_id: int,
     use_cases: OrderUseCases = Depends()
 ):
+    status = use_cases.get_payment_status(order_id)
+    return {"payment_status": status.value}
+
+@router.post("/payment-webhook")
+def payment_webhook(
+    payload: dict,
+    use_cases: OrderUseCases = Depends()
+):
+    pass
+
+@router.get("/get-filtered-orders", response_model=List[OrderDb])
+def get_custom_order_list(
+        use_cases: OrderUseCases = Depends()
+):
+    return use_cases.get_filtered_orders()
+
+@router.put("/{order_id}/status", response_model=OrderDb)
+def update_order_status(
+    order_id: int,
+    new_status: OrderStatus,
+    use_cases: OrderUseCases = Depends()
+):
+    updated_order = use_cases.update_order_status(order_id, new_status)
+    if not updated_order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    return updated_order
+
+@router.get("/{order_id}", response_model=OrderDb)
+def get_order(order_id: int, use_cases: OrderUseCases = Depends()):
     order = use_cases.get_order(order_id)
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
