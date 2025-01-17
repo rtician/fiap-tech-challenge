@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.application.use_cases.order_use_cases import OrderUseCases
 from app.domain.entities.order import Order, OrderDb
 
-router = APIRouter(prefix="/orders")
+router = APIRouter()
 
 @router.post("", response_model=OrderDb)
 def checkout(

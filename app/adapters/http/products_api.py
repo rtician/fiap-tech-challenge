@@ -6,7 +6,7 @@ from starlette import status
 from app.application.use_cases.product_use_cases import ProductUseCases
 from app.domain.entities.product import Product, ProductCategory, ProductDb
 
-router = APIRouter(prefix="/products")
+router = APIRouter()
 
 @router.post("", response_model=ProductDb)
 def add_product(

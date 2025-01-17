@@ -4,7 +4,7 @@ from app.application.use_cases.customer_use_cases import CustomerUseCases
 from app.application.exceptions import CpfAlreadyExists, NotFound
 from app.domain.entities.customer import Customer, CustomerDb
 
-router = APIRouter(prefix="/customers")
+router = APIRouter()
 
 @router.post("", response_model=CustomerDb)
 def register_customer(

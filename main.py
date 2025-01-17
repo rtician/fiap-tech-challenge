@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Depends
 
 # HTTP (FastAPI) Routers
-from app.adapters.api.customer import router as customer_router
-from app.adapters.api.orders import router as order_router
-from app.adapters.api.products import router as product_router
+from app.adapters.http.customer_api import router as customer_router
+from app.adapters.http.orders_api import router as order_router
+from app.adapters.http.products_api import router as product_router
 
 # ORM session for DB
 from app.adapters.models.session import get_db
