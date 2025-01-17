@@ -1,7 +1,13 @@
-from abc import ABC, abstractmethod
-from typing import List, Optional
+from abc import ABC
+from abc import abstractmethod
+from typing import List
+from typing import Optional
 
-from app.domain.entities.order import Order, OrderDb, OrderStatus, PaymentStatus
+from app.domain.entities.order import Order
+from app.domain.entities.order import OrderDb
+from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import PaymentStatus
+
 
 class IOrderRepository(ABC):
     @abstractmethod
@@ -28,7 +34,9 @@ class IOrderRepository(ABC):
         pass
 
     @abstractmethod
-    def update_payment_status(self, order_id: int, payment_status: PaymentStatus) -> Optional[OrderDb]:
+    def update_payment_status(
+        self, order_id: int, payment_status: PaymentStatus
+    ) -> Optional[OrderDb]:
         pass
 
     @abstractmethod

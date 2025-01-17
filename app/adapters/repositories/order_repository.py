@@ -1,9 +1,16 @@
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
+from sqlalchemy import asc
+from sqlalchemy import case
 from sqlalchemy.orm import Session
-from sqlalchemy import case, asc
-from app.adapters.models.order_model import OrderItem, OrderModel
-from app.domain.entities.order import Order, OrderDb, OrderStatus, PaymentStatus
+
+from app.adapters.models.order_model import OrderItem
+from app.adapters.models.order_model import OrderModel
+from app.domain.entities.order import Order
+from app.domain.entities.order import OrderDb
+from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import PaymentStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -16,7 +23,7 @@ class SQLOrderRepository(IOrderRepository):
             db_order = OrderModel(
                 customer_id=order.customer_id,
                 status=status.value,
-                payment_status=PaymentStatus.PENDING.value
+                payment_status=PaymentStatus.PENDING.value,
             )
             self.session.add(db_order)
             self.session.commit()
@@ -27,9 +34,7 @@ class SQLOrderRepository(IOrderRepository):
         try:
             for item in order.items:
                 db_item = OrderItem(
-                    order_id=db_order.id,
-                    product_id=item.product_id,
-                    quantity=item.quantity
+                    order_id=db_order.id, product_id=item.product_id, quantity=item.quantity
                 )
                 self.session.add(db_item)
             self.session.commit()
@@ -65,7 +70,9 @@ class SQLOrderRepository(IOrderRepository):
         self.session.refresh(order)
         return OrderDb.from_orm(order)
 
-    def update_payment_status(self, order_id: int, payment_status: PaymentStatus) -> Optional[OrderDb]:
+    def update_payment_status(
+        self, order_id: int, payment_status: PaymentStatus
+    ) -> Optional[OrderDb]:
         order = self.session.query(OrderModel).filter_by(id=order_id).first()
         if not order:
             return None
@@ -84,7 +91,7 @@ class SQLOrderRepository(IOrderRepository):
             (OrderModel.status == OrderStatus.READY.value, 3),
             (OrderModel.status == OrderStatus.PREPARING.value, 2),
             (OrderModel.status == OrderStatus.RECEIVED.value, 1),
-            else_=0
+            else_=0,
         )
 
         query = (

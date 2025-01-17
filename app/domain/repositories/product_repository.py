@@ -1,7 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import List, Optional
+from abc import ABC
+from abc import abstractmethod
+from typing import List
+from typing import Optional
 
-from app.domain.entities.product import Product, ProductCategory, ProductDb
+from app.domain.entities.product import Product
+from app.domain.entities.product import ProductCategory
+from app.domain.entities.product import ProductDb
 
 
 class IProductRepository(ABC):

@@ -1,8 +1,11 @@
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
 from app.adapters.models.session import get_db
 from app.adapters.repositories.product_repository import SQLProductRepository
-from app.domain.entities.product import Product, ProductCategory, ProductDb
+from app.domain.entities.product import Product
+from app.domain.entities.product import ProductCategory
+from app.domain.entities.product import ProductDb
 from app.domain.repositories.product_repository import IProductRepository
 
 

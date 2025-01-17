@@ -1,7 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from typing import Optional
 
-from app.domain.entities.customer import Customer, CustomerDb
+from app.domain.entities.customer import Customer
+from app.domain.entities.customer import CustomerDb
 
 
 class ICustomerRepository(ABC):

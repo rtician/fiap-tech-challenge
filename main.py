@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+from fastapi import Depends
+from fastapi import FastAPI
 
 # HTTP (FastAPI) Routers
 from app.adapters.http.customer_api import router as customer_router
@@ -24,9 +25,11 @@ def get_customer_use_cases(db=Depends(get_db)):
     repo = SQLCustomerRepository(session=db)
     return CustomerUseCases(customer_repository=repo)
 
+
 def get_order_use_cases(db=Depends(get_db)):
     repo = SQLOrderRepository(session=db)
     return OrderUseCases(order_repository=repo)
+
 
 def get_product_use_cases(db=Depends(get_db)):
     repo = SQLProductRepository(session=db)
@@ -39,19 +42,16 @@ app.include_router(
     customer_router,
     prefix="/customers",
     tags=["customers"],
-    dependencies=[Depends(get_customer_use_cases)]
+    dependencies=[Depends(get_customer_use_cases)],
 )
 
 app.include_router(
-    order_router,
-    prefix="/orders",
-    tags=["orders"],
-    dependencies=[Depends(get_order_use_cases)]
+    order_router, prefix="/orders", tags=["orders"], dependencies=[Depends(get_order_use_cases)]
 )
 
 app.include_router(
     product_router,
     prefix="/products",
     tags=["products"],
-    dependencies=[Depends(get_product_use_cases)]
+    dependencies=[Depends(get_product_use_cases)],
 )

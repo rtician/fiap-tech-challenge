@@ -1,4 +1,8 @@
-from sqlalchemy import Column, DateTime, Integer, String, func
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import func
 from sqlalchemy.orm import relationship
 
 from app.adapters.models.session import Base

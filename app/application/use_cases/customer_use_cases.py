@@ -1,8 +1,10 @@
 from app.adapters.models.session import get_db
 from app.adapters.repositories.customer_repository import SQLCustomerRepository
+from app.application.exceptions import CpfAlreadyExists
+from app.application.exceptions import NotFound
+from app.domain.entities.customer import Customer
+from app.domain.entities.customer import CustomerDb
 from app.domain.repositories.customer_repository import ICustomerRepository
-from app.domain.entities.customer import Customer, CustomerDb
-from app.application.exceptions import CpfAlreadyExists, NotFound
 
 
 class CustomerUseCases:

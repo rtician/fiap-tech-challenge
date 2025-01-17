@@ -1,9 +1,12 @@
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
 from app.adapters.models.product_model import ProductModel
-from app.domain.entities.product import Product, ProductCategory, ProductDb
+from app.domain.entities.product import Product
+from app.domain.entities.product import ProductCategory
+from app.domain.entities.product import ProductDb
 from app.domain.repositories.product_repository import IProductRepository
 
 
@@ -40,9 +43,5 @@ class SQLProductRepository(IProductRepository):
         return [ProductDb.from_orm(instance) for instance in instances]
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
-        instance = (
-            self.session.query(ProductModel)
-            .filter_by(category=category.value)
-            .first()
-        )
+        instance = self.session.query(ProductModel).filter_by(category=category.value).first()
         return ProductDb.from_orm(instance) if instance else None

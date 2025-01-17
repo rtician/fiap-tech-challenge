@@ -1,13 +1,12 @@
-from typing import List, Optional
+from typing import List
+from typing import Optional
 
 from app.adapters.models.session import get_db
 from app.adapters.repositories.order_repository import SQLOrderRepository
-from app.domain.entities.order import (
-    Order,
-    OrderDb,
-    OrderStatus,
-    PaymentStatus
-)
+from app.domain.entities.order import Order
+from app.domain.entities.order import OrderDb
+from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import PaymentStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -24,7 +23,7 @@ class OrderUseCases:
     def get_payment_status(self, order_id: int) -> PaymentStatus:
         order_db = self.order_repository.get_order(order_id)
         if not order_db:
-            #TODO: Should raise a NotFound?
+            # TODO: Should raise a NotFound?
             return PaymentStatus.DENIED
         return order_db.payment_status
 

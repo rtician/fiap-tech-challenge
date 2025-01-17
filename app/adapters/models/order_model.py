@@ -1,8 +1,14 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy import func
 from sqlalchemy.orm import relationship
 
 from app.adapters.models.session import Base
-from app.domain.entities.order import OrderStatus, PaymentStatus
+from app.domain.entities.order import OrderStatus
+from app.domain.entities.order import PaymentStatus
 
 
 class OrderModel(Base):
