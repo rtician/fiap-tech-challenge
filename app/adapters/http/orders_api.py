@@ -1,10 +1,15 @@
+import json
 from typing import List
 
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Request
 from starlette import status
 
+from app import config
+from app.application.exceptions import QRCodeGenerationError
+from app.application.integrations.mercado_pago.mercado_pago_use_cases import MercadoPagoUseCases
 from app.application.use_cases.order_use_cases import OrderUseCases
 from app.application.use_cases.order_use_cases import get_order_use_case
 from app.domain.entities.order import Order
@@ -15,9 +20,16 @@ router = APIRouter()
 
 
 @router.post("/checkout")
-def checkout(order: Order, use_cases: OrderUseCases = Depends(get_order_use_case)):
-    order_id = use_cases.checkout_order(order)
-    return {"order_id": order_id}
+def checkout(
+    order: Order,
+    use_cases: OrderUseCases = Depends(get_order_use_case),
+    mercado_pago_use_cases: MercadoPagoUseCases = Depends(),
+):
+    try:
+        order = use_cases.checkout_order(order, mercado_pago_use_cases)
+        return {"order_id": order.id}
+    except QRCodeGenerationError:
+        raise HTTPException(status_code=500, detail="Error generating QR code")
 
 
 @router.get("/{order_id}/payment-status")
@@ -27,8 +39,30 @@ def get_payment_status(order_id: int, use_cases: OrderUseCases = Depends(get_ord
 
 
 @router.post("/payment-webhook")
-def payment_webhook(payload: dict, use_cases: OrderUseCases = Depends(get_order_use_case)):
-    pass
+def payment_webhook(
+    request: Request,
+    order_use_cases: OrderUseCases = Depends(get_order_use_case),
+    mercado_pago_use_cases: MercadoPagoUseCases = Depends(),
+):
+    try:
+        body = request.body()
+        payload = json.loads(body)
+
+        x_mercadopago_signature = request.headers.get("x-mercadopago-signature")
+        is_valid_signature = mercado_pago_use_cases.verify_signature(
+            config.MERCADO_PAGO_SECRET, x_mercadopago_signature, body
+        )
+        if not x_mercadopago_signature or not is_valid_signature:
+            raise HTTPException(status_code=400, detail="Invalid or missing signature")
+
+        if payload.get("type") == "payment":
+            payment_status = mercado_pago_use_cases.get_payment_status(payload)
+            order_id = mercado_pago_use_cases.get_external_id(payload)
+            order_use_cases.update_order_status(order_id, payment_status)
+
+        return {"status": "success"}
+    except Exception:
+        raise HTTPException(status_code=500, detail="Error processing webhook")
 
 
 @router.get("/get-filtered-orders", response_model=List[OrderDb])

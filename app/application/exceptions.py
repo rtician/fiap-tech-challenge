@@ -4,3 +4,7 @@ class CpfAlreadyExists(Exception):
 
 class NotFound(Exception):
     pass
+
+
+class QRCodeGenerationError(Exception):
+    pass

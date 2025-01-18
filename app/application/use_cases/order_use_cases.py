@@ -7,6 +7,8 @@ from app.domain.entities.order import Order
 from app.domain.entities.order import OrderDb
 from app.domain.entities.order import OrderStatus
 from app.domain.entities.order import PaymentStatus
+from app.domain.entities.order import QRCodeRequest
+from app.domain.interfaces.external_payment_use_cases import ExternalPaymentUseCases
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -14,8 +16,12 @@ class OrderUseCases:
     def __init__(self, order_repository: IOrderRepository):
         self.order_repository = order_repository
 
-    def checkout_order(self, order: Order) -> OrderDb:
-        return self.order_repository.add_order(order, status=OrderStatus.PLACED)
+    def checkout_order(self, order: Order, payment_use_cases: ExternalPaymentUseCases) -> OrderDb:
+        order = self.order_repository.add_order(order, status=OrderStatus.PLACED)
+        payment_use_cases.generate_qrcode(
+            QRCodeRequest(order_id=order.id, amount=order.amount, description=order.description)
+        )
+        return order
 
     def cancel_order(self, order_id: int) -> bool:
         return self.order_repository.cancel_order(order_id)
