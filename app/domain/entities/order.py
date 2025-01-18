@@ -21,6 +21,14 @@ class PaymentStatus(str, Enum):
     PENDING = "Pending"
     APPROVED = "Approved"
     DENIED = "Denied"
+    REJECTED = "Rejected"
+    UNKNOWN = "Unknown"
+
+
+class QRCodeRequest(BaseModel):
+    description: str
+    amount: float
+    order_id: str
 
 
 class OrderItem(BaseModel):
