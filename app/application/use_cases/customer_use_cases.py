@@ -1,13 +1,13 @@
 from app.adapters.models.session import get_db
-from app.adapters.repository.customer_repository import SQLCustomerRepository
-from app.application.services.exceptions import CpfAlreadyExists
-from app.application.services.exceptions import NotFound
+from app.adapters.repositories.customer_repository import SQLCustomerRepository
+from app.application.exceptions import CpfAlreadyExists
+from app.application.exceptions import NotFound
 from app.domain.entities.customer import Customer
 from app.domain.entities.customer import CustomerDb
 from app.domain.repositories.customer_repository import ICustomerRepository
 
 
-class CustomerService:
+class CustomerUseCases:
     def __init__(self, customer_repository: ICustomerRepository):
         self.customer_repository = customer_repository
 
@@ -24,7 +24,7 @@ class CustomerService:
         return customer
 
 
-def get_customer_service() -> CustomerService:
+def get_customer_use_case() -> CustomerUseCases:
     session = next(get_db())
     repository = SQLCustomerRepository(session=session)
-    return CustomerService(repository)
+    return CustomerUseCases(repository)

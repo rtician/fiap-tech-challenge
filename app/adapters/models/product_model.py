@@ -19,8 +19,6 @@ class ProductModel(Base):
     price = Column(Float)
     quantity = Column(Integer)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(
-        DateTime(timezone=True), onupdate=func.now(), nullable=True, default=func.now()
-    )
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now(), default=func.now())
 
     order_items = relationship("OrderItem", back_populates="product")

@@ -14,6 +14,13 @@ class OrderStatus(str, Enum):
     DELIVERED = "Delivered"
     CANCELED = "Canceled"
     REFUNDED = "Refunded"
+    FINALIZED = "Finalized"
+
+
+class PaymentStatus(str, Enum):
+    PENDING = "Pending"
+    APPROVED = "Approved"
+    DENIED = "Denied"
 
 
 class OrderItem(BaseModel):
@@ -39,6 +46,7 @@ class Order(BaseModel):
 class OrderDb(Order):
     id: int
     status: OrderStatus
+    payment_status: PaymentStatus
     created_at: datetime
     updated_at: datetime
     items: List[OrderItemDb]

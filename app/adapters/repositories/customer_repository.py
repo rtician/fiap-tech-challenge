@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from app.adapters.models import CustomerModel
+from app.adapters.models.customer_model import CustomerModel
 from app.domain.entities.customer import Customer
 from app.domain.entities.customer import CustomerDb
 from app.domain.repositories.customer_repository import ICustomerRepository

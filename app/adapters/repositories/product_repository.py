@@ -3,7 +3,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
-from app.adapters.models import ProductModel
+from app.adapters.models.product_model import ProductModel
 from app.domain.entities.product import Product
 from app.domain.entities.product import ProductCategory
 from app.domain.entities.product import ProductDb
@@ -27,7 +27,7 @@ class SQLProductRepository(IProductRepository):
             for attr, value in product.model_dump().items():
                 setattr(db_product, attr, value)
             self.session.commit()
-
+            self.session.refresh(db_product)
             return ProductDb.from_orm(db_product)
 
     def delete_product(self, product_id: int) -> bool:
@@ -39,7 +39,8 @@ class SQLProductRepository(IProductRepository):
         return True
 
     def get_all_products(self) -> List[ProductDb]:
-        return [ProductDb.from_orm(instance) for instance in self.session.query(ProductModel).all()]
+        instances = self.session.query(ProductModel).all()
+        return [ProductDb.from_orm(instance) for instance in instances]
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         instance = self.session.query(ProductModel).filter_by(category=category.value).first()
