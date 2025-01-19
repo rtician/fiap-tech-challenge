@@ -1,8 +1,11 @@
+import decimal
 from datetime import datetime
 from enum import Enum
 from typing import List
 
 from pydantic import BaseModel
+
+from app.domain.entities.payment import PaymentStatus
 
 
 class OrderStatus(str, Enum):
@@ -15,20 +18,6 @@ class OrderStatus(str, Enum):
     CANCELED = "Canceled"
     REFUNDED = "Refunded"
     FINALIZED = "Finalized"
-
-
-class PaymentStatus(str, Enum):
-    PENDING = "Pending"
-    APPROVED = "Approved"
-    DENIED = "Denied"
-    REJECTED = "Rejected"
-    UNKNOWN = "Unknown"
-
-
-class QRCodeRequest(BaseModel):
-    description: str
-    amount: float
-    order_id: str
 
 
 class OrderItem(BaseModel):
@@ -58,6 +47,7 @@ class OrderDb(Order):
     created_at: datetime
     updated_at: datetime
     items: List[OrderItemDb]
+    total: decimal.Decimal
 
     class Config:
         from_attributes = True

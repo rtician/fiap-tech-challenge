@@ -17,10 +17,16 @@ class CustomerUseCases:
             raise CpfAlreadyExists("Customer with this CPF already exists.")
         return self.customer_repository.add_customer(customer)
 
-    def get_customer(self, cpf: str) -> CustomerDb:
+    def get_customer_by_cpf(self, cpf: str) -> CustomerDb:
         customer = self.customer_repository.get_customer_by_cpf(cpf)
         if not customer:
             raise NotFound("Customer with this CPF not found.")
+        return customer
+
+    def get_customer_by_id(self, customer_id: int) -> CustomerDb:
+        customer = self.customer_repository.get_customer_by_id(customer_id)
+        if not customer:
+            raise NotFound("Customer with this ID not found.")
         return customer
 
 

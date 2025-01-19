@@ -1,3 +1,4 @@
+from sqlalchemy import DECIMAL
 from sqlalchemy import Column
 from sqlalchemy import DateTime
 from sqlalchemy import ForeignKey
@@ -8,7 +9,7 @@ from sqlalchemy.orm import relationship
 
 from app.adapters.models.session import Base
 from app.domain.entities.order import OrderStatus
-from app.domain.entities.order import PaymentStatus
+from app.domain.entities.payment import PaymentStatus
 
 
 class OrderModel(Base):
@@ -18,6 +19,7 @@ class OrderModel(Base):
     customer_id = Column(Integer, ForeignKey("customer.id"))
     status = Column(String, default=OrderStatus.PLACED.value)
     payment_status = Column(String, default=PaymentStatus.PENDING.value)
+    total = Column(DECIMAL(10, 2), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now(), default=func.now())
 

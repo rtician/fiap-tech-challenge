@@ -5,12 +5,13 @@ import requests
 
 from app import config
 from app.application.exceptions import QRCodeGenerationError
-from app.domain.entities.order import PaymentStatus
-from app.domain.entities.order import QRCodeRequest
+from app.domain.entities.payment import PaymentStatus
+from app.domain.entities.payment import QRCodeRequest
 
 
 class MercadoPagoUseCases:
-    POS_URL = "https://api.mercadopago.com/pos"
+    BASE_URL = "https://api.mercadopago.com"
+    QR_ENDPOINT = "/instore/orders/qr/seller/collectors"
 
     def _headers(self):
         return {
@@ -18,35 +19,47 @@ class MercadoPagoUseCases:
             "Content-Type": "application/json",
         }
 
-    def verify_signature(self, secret: str, received_signature: str, request_body: str) -> bool:
-        computed_signature = hmac.new(
-            key=secret.encode("utf-8"), msg=request_body, digestmod=hashlib.sha256
-        ).hexdigest()
-        return hmac.compare_digest(received_signature, computed_signature)
+    @staticmethod
+    def verify_signature(received_signature: str, request_id: str, data_id: str) -> bool:
+        ts_raw, hash_raw = received_signature.split(",")
 
-    def get_external_id(self, payload: dict) -> str:
-        return payload.get("metadata", {}).get("external_id") or payload.get("order", {}).get(
-            "external_reference"
+        ts = ts_raw.split("=")[1]
+        hash = hash_raw.split("=")[1]
+
+        manifest = f"id:{data_id};request-id:{request_id};ts:{ts};"
+        hmac_obj = hmac.new(
+            config.MERCADO_PAGO_WEBHOOK_SECRET.encode(),
+            msg=manifest.encode(),
+            digestmod=hashlib.sha256,
         )
+
+        return hmac_obj.hexdigest() == hash
 
     def generate_qrcode(self, qr_request: QRCodeRequest) -> str:
         try:
             payload = {
-                "name": qr_request.description,
-                "fixed_amount": True,
-                "external_id": qr_request.order_id,
-                "qr_code": {"type": "dynamic", "amount": qr_request.amount},
+                "title": qr_request.description,
+                "external_reference": str(qr_request.order_id),
+                "total_amount": float(qr_request.total),
+                "description": qr_request.description,
+                "cash_out": {
+                    "amount": float(qr_request.total),
+                },
             }
 
-            response = requests.post(self.POS_URL, json=payload, headers=self._headers())
+            url = (
+                f"{self.BASE_URL}{self.QR_ENDPOINT}/{config.MERCADO_PAGO_USER_ID}"
+                f"/pos/{config.MERCADO_PAGO_POS_ID}/qrs"
+            )
+            response = requests.post(url, json=payload, headers=self._headers())
             response.raise_for_status()
 
             return response.json()
         except Exception as e:
             raise QRCodeGenerationError() from e
 
-    def get_payment_status(self, payload: dict) -> PaymentStatus:
-        url = payload.get("resource")
+    def get_payment_status(self, order_id: str) -> PaymentStatus:
+        url = f"{self.BASE_URL}/v1/payments/{order_id}"
         response = requests.get(url, headers=self._headers())
         response.raise_for_status()
 

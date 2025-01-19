@@ -22,8 +22,8 @@ class ProductUseCases:
     def delete_product(self, product_id: int) -> bool:
         return self.product_repository.delete_product(product_id)
 
-    def get_all_products(self) -> List[ProductDb]:
-        return self.product_repository.get_all_products()
+    def get_products(self, product_ids: List[int]) -> List[ProductDb]:
+        return self.product_repository.get_products(product_ids)
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         return self.product_repository.get_product_by_category(category)

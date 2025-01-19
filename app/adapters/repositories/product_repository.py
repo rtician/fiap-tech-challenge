@@ -38,8 +38,8 @@ class SQLProductRepository(IProductRepository):
         self.session.commit()
         return True
 
-    def get_all_products(self) -> List[ProductDb]:
-        instances = self.session.query(ProductModel).all()
+    def get_products(self, product_ids: List[int]) -> Optional[ProductDb]:
+        instances = self.session.query(ProductModel).filter(ProductModel.id.in_(product_ids)).all()
         return [ProductDb.from_orm(instance) for instance in instances]
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:

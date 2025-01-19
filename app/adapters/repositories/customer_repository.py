@@ -22,3 +22,7 @@ class SQLCustomerRepository(ICustomerRepository):
     def get_customer_by_cpf(self, cpf: str) -> Optional[CustomerDb]:
         instance = self.session.query(CustomerModel).filter_by(cpf=cpf).first()
         return CustomerDb.from_orm(instance) if instance else None
+
+    def get_customer_by_id(self, customer_id: int) -> Optional[CustomerDb]:
+        instance = self.session.query(CustomerModel).filter_by(id=customer_id).first()
+        return CustomerDb.from_orm(instance) if instance else None
