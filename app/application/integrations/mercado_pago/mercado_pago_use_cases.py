@@ -26,7 +26,7 @@ class MercadoPagoUseCases:
         ts = ts_raw.split("=")[1]
         hash = hash_raw.split("=")[1]
 
-        manifest = f"id:{data_id};request-id:{request_id};ts:{ts};"
+        manifest = f"id:{data_id};request-id:{request_id};ts:{ts};"  # noqa: E231, E702
         hmac_obj = hmac.new(
             config.MERCADO_PAGO_WEBHOOK_SECRET.encode(),
             msg=manifest.encode(),
