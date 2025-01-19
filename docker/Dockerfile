@@ -18,5 +18,5 @@ COPY . .
 RUN chown app:app /app -R
 USER app
 
-EXPOSE 8000
+EXPOSE 8009
 CMD ["/entrypoint/entrypoint.sh"]

@@ -1,11 +1,11 @@
 from abc import ABC
 from abc import abstractmethod
 
-from app.domain.entities.order import PaymentStatus
-from app.domain.entities.order import QRCodeRequest
+from app.domain.entities.payment import PaymentStatus
+from app.domain.entities.payment import QRCodeRequest
 
 
-class ExternalPaymentUseCases(ABC):
+class IExternalPaymentUseCase(ABC):
     @abstractmethod
     def generate_qrcode(self, qr_request: QRCodeRequest) -> str:
         pass

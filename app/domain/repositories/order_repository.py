@@ -6,7 +6,7 @@ from typing import Optional
 from app.domain.entities.order import Order
 from app.domain.entities.order import OrderDb
 from app.domain.entities.order import OrderStatus
-from app.domain.entities.order import PaymentStatus
+from app.domain.entities.payment import PaymentStatus
 
 
 class IOrderRepository(ABC):

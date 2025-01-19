@@ -1,3 +1,4 @@
+import decimal
 from typing import List
 from typing import Optional
 
@@ -10,7 +11,7 @@ from app.adapters.models.order_model import OrderModel
 from app.domain.entities.order import Order
 from app.domain.entities.order import OrderDb
 from app.domain.entities.order import OrderStatus
-from app.domain.entities.order import PaymentStatus
+from app.domain.entities.payment import PaymentStatus
 from app.domain.repositories.order_repository import IOrderRepository
 
 
@@ -18,12 +19,13 @@ class SQLOrderRepository(IOrderRepository):
     def __init__(self, session: Session):
         self.session = session
 
-    def add_order(self, order: Order, status: OrderStatus) -> OrderDb:
+    def add_order(self, order: Order, status: OrderStatus, total: str) -> OrderDb:
         try:
             db_order = OrderModel(
                 customer_id=order.customer_id,
                 status=status.value,
                 payment_status=PaymentStatus.PENDING.value,
+                total=decimal.Decimal(total),
             )
             self.session.add(db_order)
             self.session.commit()

@@ -26,6 +26,6 @@ def register_customer(
 @router.get("", response_model=CustomerDb)
 def get_customer_by_cpf(cpf: str, use_cases: CustomerUseCases = Depends(get_customer_use_case)):
     try:
-        return use_cases.get_customer(cpf)
+        return use_cases.get_customer_by_cpf(cpf)
     except NotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
