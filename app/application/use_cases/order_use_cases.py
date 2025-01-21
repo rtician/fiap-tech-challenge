@@ -1,5 +1,6 @@
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from app.adapters.models.session import get_db
 from app.adapters.repositories.order_repository import SQLOrderRepository
@@ -25,20 +26,20 @@ class OrderUseCases:
         payment_use_cases: IExternalPaymentUseCase,
         customer_use_cases: CustomerUseCases,
         product_use_cases: ProductUseCases,
-    ) -> OrderDb:
+    ) -> Tuple[OrderDb, str]:
         customer = customer_use_cases.get_customer_by_id(order.customer_id)
         products = product_use_cases.get_products([x.product_id for x in order.items])
         total = sum([product.price for product in products])
         order = self.order_repository.add_order(order, status=OrderStatus.PLACED, total=str(total))
 
-        payment_use_cases.generate_qrcode(
+        qrcode_link = payment_use_cases.generate_qrcode(
             QRCodeRequest(
                 order_id=order.id,
                 total=total,
                 description=f"Customer {customer.name} - {customer.cpf}",
             )
         )
-        return order
+        return order, qrcode_link
 
     def cancel_order(self, order_id: int) -> bool:
         return self.order_repository.cancel_order(order_id)
