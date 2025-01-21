@@ -22,7 +22,7 @@ class IProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_products(self, product_ids: List[int]) -> Optional[ProductDb]:
+    def get_products(self, product_ids: Optional[List[int]] = None) -> Optional[ProductDb]:
         pass
 
     @abstractmethod
