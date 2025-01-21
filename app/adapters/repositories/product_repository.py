@@ -38,9 +38,11 @@ class SQLProductRepository(IProductRepository):
         self.session.commit()
         return True
 
-    def get_products(self, product_ids: List[int]) -> Optional[ProductDb]:
-        instances = self.session.query(ProductModel).filter(ProductModel.id.in_(product_ids)).all()
-        return [ProductDb.from_orm(instance) for instance in instances]
+    def get_products(self, product_ids: Optional[List[int]] = None) -> Optional[ProductDb]:
+        query = self.session.query(ProductModel)
+        if product_ids:
+            query = query.filter(ProductModel.id.in_(product_ids))
+        return [ProductDb.from_orm(instance) for instance in query.all()]
 
     def get_product_by_category(self, category: ProductCategory) -> Optional[ProductDb]:
         instance = self.session.query(ProductModel).filter_by(category=category.value).first()
