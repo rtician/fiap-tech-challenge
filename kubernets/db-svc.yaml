@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: postgres
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: postgres
   ports:
     - protocol: TCP
       port: 5432
       targetPort: 5432
-      nodePort: 31432

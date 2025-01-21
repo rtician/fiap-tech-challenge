@@ -2,11 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-deployment
+  labels:
+    app: app
+    environment: production
+  annotations:
+    description: "Deployment for the main application"
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
