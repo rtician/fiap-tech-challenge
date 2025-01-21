@@ -34,10 +34,10 @@ def checkout(
     product_use_cases: ProductUseCases = Depends(get_product_use_case),
 ):
     try:
-        order = use_cases.checkout_order(
+        order, qrcode_link = use_cases.checkout_order(
             order, mercado_pago_use_cases, customer_use_cases, product_use_cases
         )
-        return {"order_id": order.id}
+        return {"order_id": order.id, "qrcode_link": qrcode_link}
     except NotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except QRCodeGenerationError:

@@ -39,7 +39,7 @@ def delete_product(product_id: int, use_cases: ProductUseCases = Depends(get_pro
 
 @router.get("", response_model=List[ProductDb])
 def get_all_products(use_cases: ProductUseCases = Depends(get_product_use_case)):
-    return use_cases.get_all_products()
+    return use_cases.get_products()
 
 
 @router.get("/{category}", response_model=ProductDb)
