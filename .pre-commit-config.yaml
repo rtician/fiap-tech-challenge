@@ -3,9 +3,11 @@ repos:
     rev: v4.3.0
     hooks:
       - id: trailing-whitespace
+        exclude: \.(min\.css|min\.js|po|mo|pem|yaml|yml)$
       - id: end-of-file-fixer
+        exclude: \.(min\.css|min\.js|po|mo|pem|yaml|yml)$
       - id: requirements-txt-fixer
-        exclude: \.(min\.css|min\.js|po|mo|pem)$
+        exclude: \.(min\.css|min\.js|po|mo|pem|yaml|yml)$
   - repo: https://github.com/psf/black
     rev: 22.6.0
     hooks:
