@@ -54,4 +54,17 @@ This project follows a **hexagonal architecture** (also known as ports and adapt
 
 
 ## API Endpoints
-The FastAPI Swagger UI is available at: [http://localhost:8009/docs](http://localhost:8009/docs)
+(Local) The FastAPI Swagger UI is available at: [http://localhost:8009/docs](http://localhost:8009/docs)
+
+*(AWS) The API Swagger UI is available at:* [http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/](http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/)
+
+## Videos Explanations Links
+Part 1 - [https://www.youtube.com/watch?v=B26AEoMjJgU](https://www.youtube.com/watch?v=B26AEoMjJgU) (Architecture representation)
+
+Part 2 - [https://www.youtube.com/watch?v=ZrnqsGbtpDw](https://www.youtube.com/watch?v=B26AEoMjJgU) (API use)
+
+## Workflow Representations
+### Infra Representation:
+![](./Assets/diagrams/infra-workflow.png)
+### App Representation:
+![](./Assets/diagrams/app-workflow.png)

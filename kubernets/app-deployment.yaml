@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: gamatosms/fiap-tech-challenge:v2
+        image: gamatosms/fiap-tech-challenge:v3
         ports:
         - containerPort: 8009
         env:
