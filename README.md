@@ -58,6 +58,23 @@ This project follows a **hexagonal architecture** (also known as ports and adapt
 
 *(AWS) The API Swagger UI is available at:* [http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/](http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/)
 
+### Execution Order for API:
+Fluxo Principal:
+
+1 - Criar customer (/customers)
+
+2 - Criar produto (/products)
+
+3 - Criar um pedido (/orders/checkout)
+
+4 - Realizar o pagamento (orders/payment-webhook)
+
+5 - Alterar o status do pedido assim que finalizar (/orders/{orders_id}/status)
+
+*Fluxo secundário:*
+
+*Rotas secundárias para realizar consultas e ou alterações de pedidos, produtos e clientes.*
+
 ## Videos Explanations Links
 Part 1 - [https://www.youtube.com/watch?v=B26AEoMjJgU](https://www.youtube.com/watch?v=B26AEoMjJgU) (Architecture representation)
 
@@ -65,6 +82,6 @@ Part 2 - [https://www.youtube.com/watch?v=ZrnqsGbtpDw](https://www.youtube.com/w
 
 ## Workflow Representations
 ### Infra Representation:
-![](./Assets/diagrams/infra-workflow.png)
+![](./Assets/workflows/infra-workflow.png)
 ### App Representation:
-![](./Assets/diagrams/app-workflow.png)
+![](./Assets/workflows/app-workflow.png)
