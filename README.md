@@ -51,7 +51,7 @@ This project follows a **hexagonal architecture** (also known as ports and adapt
     ```bash
    make apply-migrations
    ```
-## Setup and INstallation using Kubernetes
+## Setup and Installation using Kubernetes
 
 1. **Clone the repository**:
     ```bash
@@ -65,18 +65,15 @@ This project follows a **hexagonal architecture** (also known as ports and adapt
 
 3. **Build and run the application** using Kubernetes:
    ```bash
-  
     kubectl apply -f ./kubernets/secrets.yaml
     kubectl apply -f ./kubernets/configmap.yaml
     kubectl apply -f ./kubernets/db-pv.yaml
     kubectl apply -f ./kubernets/db-pvc.yaml
     kubectl apply -f ./kubernets/db-svc.yaml
     kubectl apply -f ./kubernets/db-deployment.yaml
-  
     kubectl apply -f ./kubernets/app-svc.yaml
     kubectl apply -f ./kubernets/app-deployment.yaml
     kubectl apply -f ./kubernets/hpa.yaml
-    
    ```
 
 ## API Endpoints
