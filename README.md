@@ -51,12 +51,38 @@ This project follows a **hexagonal architecture** (also known as ports and adapt
     ```bash
    make apply-migrations
    ```
+## Setup and INstallation using Kubernetes
 
+1. **Clone the repository**:
+    ```bash
+    git clone git@github.com:rtician/fiap-tech-challenge.git
+    cd fiap-tech-challenge
+    ```
+2. **Install Docker and Docker Compose** if you haven’t already:
+    - [Docker](https://docs.docker.com/get-docker/)
+    - [Docker Compose](https://docs.docker.com/compose/install/)
+    - Enable kubernetes in DOCKER settings
+
+3. **Build and run the application** using Kubernetes:
+   ```bash
+  
+    kubectl apply -f ./kubernets/secrets.yaml
+    kubectl apply -f ./kubernets/configmap.yaml
+    kubectl apply -f ./kubernets/db-pv.yaml
+    kubectl apply -f ./kubernets/db-pvc.yaml
+    kubectl apply -f ./kubernets/db-svc.yaml
+    kubectl apply -f ./kubernets/db-deployment.yaml
+  
+    kubectl apply -f ./kubernets/app-svc.yaml
+    kubectl apply -f ./kubernets/app-deployment.yaml
+    kubectl apply -f ./kubernets/hpa.yaml
+    
+   ```
 
 ## API Endpoints
 (Local) The FastAPI Swagger UI is available at: [http://localhost:8009/docs](http://localhost:8009/docs)
 
-*(AWS) The API Swagger UI is available at:* [http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/](http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/)
+*(AWS) The API Swagger UI is available at:* [http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/](http://ad1b15e07460a4028b7557c876167662-1972371784.us-east-2.elb.amazonaws.com/docs#/) - (DISABLE $$)
 
 ### Execution Order for API:
 Fluxo Principal:
