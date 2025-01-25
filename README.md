@@ -103,6 +103,8 @@ Part 1 - [https://www.youtube.com/watch?v=B26AEoMjJgU](https://www.youtube.com/w
 
 Part 2 - [https://www.youtube.com/watch?v=ZrnqsGbtpDw](https://www.youtube.com/watch?v=B26AEoMjJgU) (API use)
 
+Part 3 - [https://youtu.be/DgDAjOqwkTc](https://youtu.be/DgDAjOqwkTc) (API use)
+
 ## Workflow Representations
 ### Infra Representation:
 ![](./assets/workflows/infra-workflow.png)
